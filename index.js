@@ -4,13 +4,26 @@ const app = express();
 let comando = "";
 
 app.get('/Comando', (req, res) => {
-    const texto = req.query.texto || "";
 
-    if (texto.toLowerCase().includes("prende el foco")) {
-        comando = "ON";
-    } 
-    else if (texto.toLowerCase().includes("apaga el foco")) {
-        comando = "OFF";
+    const texto = (req.query.texto || "").toLowerCase();
+    comando = "";
+
+    const quierePrender = texto.match(/prende|enciende|activa/);
+    const quiereApagar  = texto.match(/apaga|desactiva|deshabilita/);
+
+    if (texto.includes("verde")) {
+
+        if (quierePrender)
+            comando = "GREEN_ON";
+        else if (quiereApagar)
+            comando = "GREEN_OFF";
+    }
+    else if (texto.includes("azul")) {
+
+        if (quierePrender)
+            comando = "BLUE_ON";
+        else if (quiereApagar)
+            comando = "BLUE_OFF";
     }
 
     res.send("Comando recibido: " + comando);
