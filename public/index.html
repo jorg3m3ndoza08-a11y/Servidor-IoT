@@ -78,51 +78,76 @@ function escuchar() {
 
         const quierePrender = texto.match(/prende|enciende|activa/);
         const quiereApagar  = texto.match(/apaga|desactiva|deshabilita/);
-
-        // -------- VERDE --------
-        if (texto.includes("verde")) {
-
+        
+        const tieneVerde = texto.includes("verde");
+        const tieneAzul  = texto.includes("azul");
+        
+        // ---- AMBOS LEDS ----
+        if (tieneVerde && tieneAzul) {
+        
             if (quierePrender) {
-
-                hablar("Por supuesto, señor. Activando LED verde.");
-
+        
+                hablar("Ambos sistemas activados, señor.");
+        
                 setTimeout(() => {
                     fetch(URL_SERVIDOR + texto);
                 }, 1500);
             }
-
+        
             else if (quiereApagar) {
-
-                hablar("Entendido, señor. Apagando LED verde.");
-
+        
+                hablar("Ambos sistemas desactivados, señor.");
+        
                 setTimeout(() => {
                     fetch(URL_SERVIDOR + texto);
                 }, 1500);
             }
         }
-
-        // -------- AZUL --------
-        else if (texto.includes("azul")) {
-
+        
+        // ---- SOLO VERDE ----
+        else if (tieneVerde) {
+        
             if (quierePrender) {
-
-                hablar("Claro, señor. Activando LED azul.");
-
+        
+                hablar("Activando LED verde, señor.");
+        
                 setTimeout(() => {
                     fetch(URL_SERVIDOR + texto);
                 }, 1500);
             }
-
+        
             else if (quiereApagar) {
-
-                hablar("Como ordene, señor. Apagando LED azul.");
-
+        
+                hablar("Apagando LED verde, señor.");
+        
                 setTimeout(() => {
                     fetch(URL_SERVIDOR + texto);
                 }, 1500);
             }
         }
-
+        
+        // ---- SOLO AZUL ----
+        else if (tieneAzul) {
+        
+            if (quierePrender) {
+        
+                hablar("Activando LED azul, señor.");
+        
+                setTimeout(() => {
+                    fetch(URL_SERVIDOR + texto);
+                }, 1500);
+            }
+        
+            else if (quiereApagar) {
+        
+                hablar("Apagando LED azul, señor.");
+        
+                setTimeout(() => {
+                    fetch(URL_SERVIDOR + texto);
+                }, 1500);
+            }
+        }
+        
         else {
             hablar("No reconocí el dispositivo, señor.");
         }
