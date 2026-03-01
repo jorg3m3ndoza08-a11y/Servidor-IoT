@@ -6,10 +6,10 @@ let comando = "";
 app.get('/Comando', (req, res) => {
     const texto = req.query.texto || "";
 
-    if (texto.toLowerCase().includes("prende")) {
+    if (texto.toLowerCase().includes("prende el foco")) {
         comando = "ON";
     } 
-    else if (texto.toLowerCase().includes("apaga")) {
+    else if (texto.toLowerCase().includes("apaga el foco")) {
         comando = "OFF";
     }
 

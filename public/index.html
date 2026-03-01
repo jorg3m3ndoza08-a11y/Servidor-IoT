@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Asistente</title>
+</head>
+<body>
+
+<h2>Control por voz</h2>
+<button onclick="escuchar()">Hablar</button>
+
+<p id="texto"></p>
+
+<script>
+function escuchar() {
+    const reconocimiento = new webkitSpeechRecognition();
+    reconocimiento.lang = "es-MX";
+
+    reconocimiento.onresult = function(event) {
+        let texto = event.results[0][0].transcript;
+        document.getElementById("texto").innerText = texto;
+
+        fetch("https://TU_URL_RAILWAY/Comando?texto=" + texto);
+    }
+
+    reconocimiento.start();
+}
+</script>
+
+</body>
+</html>
