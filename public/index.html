@@ -2,29 +2,133 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Asistente</title>
+<title>BABAS - Sistema Inteligente</title>
+
+<style>
+body {
+    background-color: #0d1117;
+    color: #00ffff;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-top: 100px;
+}
+
+h1 {
+    font-size: 50px;
+}
+
+button {
+    padding: 15px 40px;
+    font-size: 18px;
+    background-color: #00ffff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#estado {
+    margin-top: 30px;
+    font-size: 20px;
+    color: white;
+}
+</style>
+
 </head>
 <body>
 
-<h2>Control por voz</h2>
-<button onclick="escuchar()">Hablar</button>
+<h1>BABAS</h1>
+<h3>Asistente Inteligente IoT</h3>
 
-<p id="texto"></p>
+<button onclick="escuchar()">Hablar con Babas</button>
+
+<p id="estado">Sistema en espera...</p>
 
 <script>
+
+const URL_SERVIDOR = "https://servidor-iot-production-b762.up.railway.app/Comando?texto=";
+
+// ----------- VOZ ESTILO JARVIS -----------
+function hablar(texto) {
+
+    const mensaje = new SpeechSynthesisUtterance(texto);
+
+    mensaje.lang = "es-MX";
+    mensaje.rate = 0.85;   // Más lento
+    mensaje.pitch = 0.7;   // Más grave
+
+    speechSynthesis.speak(mensaje);
+}
+
+// ----------- RECONOCIMIENTO -----------
 function escuchar() {
+
     const reconocimiento = new webkitSpeechRecognition();
     reconocimiento.lang = "es-MX";
+    reconocimiento.start();
 
     reconocimiento.onresult = function(event) {
-        let texto = event.results[0][0].transcript;
-        document.getElementById("texto").innerText = texto;
 
-        fetch("https://TU_URL_RAILWAY/Comando?texto=" + texto);
-    }
+        let texto = event.results[0][0].transcript.toLowerCase();
+        document.getElementById("estado").innerText = "Escuché: " + texto;
 
-    reconocimiento.start();
+        if (!texto.includes("babas")) {
+            hablar("Debe llamarme primero, señor.");
+            return;
+        }
+
+        const quierePrender = texto.match(/prende|enciende|activa/);
+        const quiereApagar  = texto.match(/apaga|desactiva|deshabilita/);
+
+        // -------- VERDE --------
+        if (texto.includes("verde")) {
+
+            if (quierePrender) {
+
+                hablar("Por supuesto, señor. Activando LED verde.");
+
+                setTimeout(() => {
+                    fetch(URL_SERVIDOR + texto);
+                }, 1500);
+            }
+
+            else if (quiereApagar) {
+
+                hablar("Entendido, señor. Apagando LED verde.");
+
+                setTimeout(() => {
+                    fetch(URL_SERVIDOR + texto);
+                }, 1500);
+            }
+        }
+
+        // -------- AZUL --------
+        else if (texto.includes("azul")) {
+
+            if (quierePrender) {
+
+                hablar("Claro, señor. Activando LED azul.");
+
+                setTimeout(() => {
+                    fetch(URL_SERVIDOR + texto);
+                }, 1500);
+            }
+
+            else if (quiereApagar) {
+
+                hablar("Como ordene, señor. Apagando LED azul.");
+
+                setTimeout(() => {
+                    fetch(URL_SERVIDOR + texto);
+                }, 1500);
+            }
+        }
+
+        else {
+            hablar("No reconocí el dispositivo, señor.");
+        }
+    };
 }
+
 </script>
 
 </body>
