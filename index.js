@@ -13,28 +13,6 @@ app.get('/Comando', (req, res) => {
     const quierePrender = texto.match(/prende|enciende|activa/);
     const quiereApagar  = texto.match(/apaga|desactiva|deshabilita/);
 
-    // ---- CLIMA ----
-    if (texto.includes("clima") || texto.includes("temperatura")) {
-        hablar("Consultando condiciones actuales, señor.");
-        setTimeout(() => {
-            obtenerClima();
-        }, 1500);
-        return;
-    }
-
-    // ---- HORA ACTUAL ----
-    if (texto.includes("hora")) {
-    
-        const ahora = new Date();
-        let horas = ahora.getHours();
-        let minutos = ahora.getMinutes();
-    
-        if (minutos < 10) minutos = "0" + minutos;
-    
-        hablar("Son las " + horas + " con " + minutos + " minutos, señor.");
-        return;
-    }
-
     // ---- VERDE ----
     if (texto.includes("verde")) {
         if (quierePrender)
