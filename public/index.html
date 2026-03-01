@@ -59,6 +59,33 @@ function hablar(texto) {
     speechSynthesis.speak(mensaje);
 }
 
+async function obtenerClima() {
+
+    const lat = 20.1011;
+    const lon = -98.7591;
+
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+
+    const respuesta = await fetch(url);
+    const datos = await respuesta.json();
+
+    const temperatura = datos.current_weather.temperature;
+    const viento = datos.current_weather.windspeed;
+
+    let comentario = "";
+
+    if (temperatura > 30)
+        comentario = "Hace bastante calor, señor.";
+    else if (temperatura < 10)
+        comentario = "Hace bastante frío, señor.";
+    else
+        comentario = "El clima es agradable en este momento, señor.";
+
+    hablar("La temperatura actual es de " + temperatura + 
+           " grados Celsius, con velocidad de viento de " + 
+           viento + " kilómetros por hora. " + comentario);
+}
+
 // ----------- RECONOCIMIENTO -----------
 function escuchar() {
 
@@ -81,6 +108,7 @@ function escuchar() {
         
         const tieneVerde = texto.includes("verde");
         const tieneAzul  = texto.includes("azul");
+        
         
         // ---- AMBOS LEDS ----
         if (tieneVerde && tieneAzul) {
