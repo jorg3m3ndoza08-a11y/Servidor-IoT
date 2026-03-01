@@ -3,37 +3,38 @@ const app = express();
 
 app.use(express.static('public'));
 
-let comando = "";
+let comandos = [];
 
 app.get('/Comando', (req, res) => {
 
     const texto = (req.query.texto || "").toLowerCase();
-    comando = "";
+    comandos = [];
 
     const quierePrender = texto.match(/prende|enciende|activa/);
     const quiereApagar  = texto.match(/apaga|desactiva|deshabilita/);
 
+    // ---- VERDE ----
     if (texto.includes("verde")) {
-
         if (quierePrender)
-            comando = "GREEN_ON";
+            comandos.push("GREEN_ON");
         else if (quiereApagar)
-            comando = "GREEN_OFF";
-    }
-    else if (texto.includes("azul")) {
-
-        if (quierePrender)
-            comando = "BLUE_ON";
-        else if (quiereApagar)
-            comando = "BLUE_OFF";
+            comandos.push("GREEN_OFF");
     }
 
-    res.send("Comando recibido: " + comando);
+    // ---- AZUL ----
+    if (texto.includes("azul")) {
+        if (quierePrender)
+            comandos.push("BLUE_ON");
+        else if (quiereApagar)
+            comandos.push("BLUE_OFF");
+    }
+
+    res.json({ comandos });
 });
 
 app.get('/LeerComando', (req, res) => {
-    res.send(comando);
-    comando = "";
+    res.json({ comandos });
+    comandos = [];
 });
 
 app.listen(3000, () => {
