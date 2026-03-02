@@ -103,6 +103,32 @@ function escuchar() {
             return;
         }
 
+        // ---- ACTIVACIÓN SIMPLE ----
+        if (texto.trim() === "babas") {
+            hablar("Sí, señor. Estoy escuchando.");
+            return;
+        }
+
+        // ---- SALUDO ----
+        if (texto.includes("hola babas") || 
+            texto.match(/buenos días babas|buenas tardes babas|buenas noches babas/)) {
+        
+            const ahora = new Date();
+            const hora = ahora.getHours();
+        
+            let saludo = "";
+        
+            if (hora < 12)
+                saludo = "Buenos días, señor. Me encuentro completamente operativo y listo para asistirle.";
+            else if (hora < 19)
+                saludo = "Buenas tardes, señor. Todos los sistemas funcionan correctamente.";
+            else
+                saludo = "Buenas noches, señor. Estoy aquí para lo que necesite.";
+        
+            hablar(saludo);
+            return;
+        }
+
         const quierePrender = texto.match(/prende|enciende|activa/);
         const quiereApagar  = texto.match(/apaga|desactiva|deshabilita/);
         
