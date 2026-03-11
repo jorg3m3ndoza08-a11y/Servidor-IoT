@@ -188,7 +188,14 @@ console.log("Distancia GPS:",distanciaGPS);
 
 
 // VALIDAR GPS
-if(coords.accuracy <= 30 && distanciaGPS <= 30){
+const RANGO = 0.00006;
+
+if(
+coords.latitude >= LAT_AULA - RANGO &&
+coords.latitude <= LAT_AULA + RANGO &&
+coords.longitude >= LON_AULA - RANGO &&
+coords.longitude <= LON_AULA + RANGO
+){
 
 hablar("Alumno verificado");
 
