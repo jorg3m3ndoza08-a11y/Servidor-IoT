@@ -13,12 +13,12 @@ const lonHTML = document.getElementById("longitud");
 
 
 // NOMBRE DEL ALUMNO
-const nombreAlumno = "Tu Nombre";
+const nombreAlumno = "Jorge";
 
 
 // COORDENADAS DEL AULA
-const LAT_AULA = 19.97887514205302;
-const LON_AULA = -98.68597813586327;
+const LAT_AULA = 19.978854975731128;
+const LON_AULA = -98.68596605333927;
 
 
 // VARIABLES
