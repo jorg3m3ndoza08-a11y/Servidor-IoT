@@ -4,18 +4,19 @@ const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-// COORDENADAS DEL AULA
-const LAT_AULA = 20.000000;
-const LON_AULA = -98.000000;
+
+// COORDENADAS DEL AULA (CAMBIAR POR LAS REALES)
+const LAT_AULA = 19.978912;
+const LON_AULA = -98.685967;
 
 
 // VARIABLES
-let rostroDetectado=false;
-let alumnoDescriptor=null;
+let rostroDetectado = false;
+let alumnoDescriptor = null;
 
 
 // CAMARA
-navigator.mediaDevices.getUserMedia({ video:true })
+navigator.mediaDevices.getUserMedia({ video: true })
 .then(stream => {
 video.srcObject = stream;
 });
@@ -25,9 +26,9 @@ video.srcObject = stream;
 function hablar(texto){
 
 const msg = new SpeechSynthesisUtterance(texto);
-msg.lang="es-MX";
-msg.rate=0.9;
-msg.pitch=0.8;
+msg.lang = "es-MX";
+msg.rate = 0.9;
+msg.pitch = 0.8;
 
 speechSynthesis.speak(msg);
 
@@ -42,7 +43,7 @@ return new Promise((resolve,reject)=>{
 navigator.geolocation.getCurrentPosition(
 pos => resolve(pos.coords),
 err => reject(err),
-{enableHighAccuracy:true}
+{ enableHighAccuracy:true }
 );
 
 });
@@ -50,21 +51,21 @@ err => reject(err),
 }
 
 
-// DISTANCIA GPS
+// CALCULAR DISTANCIA (HAVERSINE)
 function calcularDistancia(lat1,lon1,lat2,lon2){
 
 const R = 6371000;
 
-const dLat=(lat2-lat1)*Math.PI/180;
-const dLon=(lon2-lon1)*Math.PI/180;
+const dLat = (lat2-lat1)*Math.PI/180;
+const dLon = (lon2-lon1)*Math.PI/180;
 
-const a=
+const a =
 Math.sin(dLat/2)*Math.sin(dLat/2)+
 Math.cos(lat1*Math.PI/180)*
 Math.cos(lat2*Math.PI/180)*
 Math.sin(dLon/2)*Math.sin(dLon/2);
 
-const c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+const c = 2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 
 return R*c;
 
@@ -91,22 +92,34 @@ await faceapi.nets.faceRecognitionNet.loadFromUri(
 const img = await faceapi.fetchImage("alumno.jpg");
 
 const alumno = await faceapi
-.detectSingleFace(img)
+.detectSingleFace(
+img,
+new faceapi.TinyFaceDetectorOptions()
+)
 .withFaceLandmarks()
 .withFaceDescriptor();
 
+if(!alumno){
+
+console.log("No se detectó rostro en alumno.jpg");
+return;
+
+}
+
 alumnoDescriptor = alumno.descriptor;
 
+console.log("Descriptor alumno cargado");
 
 detectar();
 
 }
 
+
+// INICIAR IA CUANDO EL VIDEO INICIE
 video.addEventListener("play", iniciarIA);
 
 
-
-// DETECCION
+// DETECCION CONTINUA
 async function detectar(){
 
 const detections = await faceapi
@@ -126,15 +139,15 @@ ctx.clearRect(0,0,canvas.width,canvas.height);
 
 
 // SI HAY ROSTRO
-if(detections.length>0){
+if(detections.length > 0){
 
 const det = detections[0];
 const box = det.detection.box;
 
 
-// DIBUJAR RECUADRO
-ctx.strokeStyle="#00ff00";
-ctx.lineWidth=3;
+// DIBUJAR CUADRO
+ctx.strokeStyle = "#00ff00";
+ctx.lineWidth = 3;
 
 ctx.strokeRect(
 box.x,
@@ -144,7 +157,7 @@ box.height
 );
 
 
-// COMPARAR DESCRIPTOR
+// COMPARAR ROSTRO
 const distanciaCara = faceapi.euclideanDistance(
 det.descriptor,
 alumnoDescriptor
@@ -156,7 +169,7 @@ console.log("Distancia rostro:",distanciaCara);
 // SI ES EL ALUMNO
 if(distanciaCara < 0.6 && !rostroDetectado){
 
-rostroDetectado=true;
+rostroDetectado = true;
 
 try{
 
@@ -174,7 +187,7 @@ LON_AULA
 console.log("Distancia GPS:",distanciaGPS);
 
 
-// VALIDAR ACCURACY Y RADIO
+// VALIDAR GPS
 if(coords.accuracy <= 6 && distanciaGPS <= 6){
 
 hablar("Alumno verificado");
@@ -207,11 +220,12 @@ else{
 
 if(rostroDetectado){
 
-rostroDetectado=false;
+rostroDetectado = false;
 
 hablar("Usuario ausente");
 
-document.getElementById("estado").innerText="Rostro perdido";
+document.getElementById("estado").innerText =
+"Rostro perdido";
 
 fetch("/Comando?texto=apaga verde");
 
@@ -220,6 +234,7 @@ fetch("/Comando?texto=apaga verde");
 }
 
 
+// LOOP
 setTimeout(detectar,300);
 
 }
