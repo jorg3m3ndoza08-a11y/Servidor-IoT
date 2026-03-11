@@ -5,23 +5,42 @@
 <title>BABAS - Sistema Inteligente</title>
 
 <style>
+
 body{
 background:#0d1117;
 color:#00ffff;
 font-family:Arial;
 text-align:center;
-margin-top:100px;
+margin-top:60px;
 }
 
 h1{
 font-size:50px;
+margin-bottom:5px;
 }
 
 #estado{
-margin-top:30px;
-font-size:20px;
+margin-top:20px;
+font-size:22px;
 color:white;
 }
+
+#panel{
+margin-top:20px;
+font-size:18px;
+color:#00ff9c;
+background:#161b22;
+padding:15px;
+width:400px;
+margin-left:auto;
+margin-right:auto;
+border-radius:10px;
+}
+
+#panel p{
+margin:8px;
+}
+
 </style>
 
 </head>
@@ -34,7 +53,8 @@ color:white;
 
 <video id="video" width="640" height="480" autoplay muted></video>
 
-<canvas id="canvas"
+<canvas
+id="canvas"
 width="640"
 height="480"
 style="position:absolute;left:0;top:0;">
@@ -43,6 +63,20 @@ style="position:absolute;left:0;top:0;">
 </div>
 
 <p id="estado">Rostro en espera...</p>
+
+<div id="panel">
+
+<p>Nombre detectado: <span id="nombre">---</span></p>
+
+<p>Distancia GPS: <span id="distancia">---</span></p>
+
+<p>Dentro del rango: <span id="rango">---</span></p>
+
+<p>Latitud: <span id="latitud">---</span></p>
+
+<p>Longitud: <span id="longitud">---</span></p>
+
+</div>
 
 <script src="https://unpkg.com/face-api.js@0.22.2/dist/face-api.min.js"></script>
 <script src="client.js"></script>
