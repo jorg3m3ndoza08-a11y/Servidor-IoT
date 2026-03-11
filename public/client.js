@@ -188,7 +188,7 @@ console.log("Distancia GPS:",distanciaGPS);
 
 
 // VALIDAR GPS
-if(coords.accuracy <= 6 && distanciaGPS <= 6){
+if(coords.accuracy <= 30 && distanciaGPS <= 30){
 
 hablar("Alumno verificado");
 
